@@ -4,6 +4,8 @@
 
 import tweepy
 import time, random, os
+import re
+import textwrap
 from PIL import Image, ImageDraw, ImageFont
 from PIL import ImageFile
 from config import *
@@ -17,6 +19,7 @@ api = tweepy.API(auth)
 
 #Backup to get User ID
 #user = api.get_user(screen_name = 'OfficiaIKanye')
+#user = api.get_user(screen_name = 'kanyewest')
 
 KanyeID = 74346390
 lastTweet = None
@@ -27,7 +30,7 @@ def getTweet():
     global lastTweet
 
     #Get most recent tweet
-    recentTweet = api.user_timeline('OfficiaIKanye')[0]
+    recentTweet = api.user_timeline('kanyewest')[0]
     print("Getting last tweet\n")
 
     #If tweet is new make a new picture
@@ -64,14 +67,18 @@ def makePic(newTweet):
         width, height = temp.size
         textWidth, textHeight = draw.textsize(txt, font = font)
 
+        #Setup wrapping
+        lines = textwrap.wrap(txt, width = 40)
+
         #Border
-        draw.text((((width - textWidth)/2)-1, ((height-textHeight)/2)-1), txt, font = font, fill = "black")
-        draw.text((((width - textWidth)/2)+1, ((height-textHeight)/2)-1), txt, font = font, fill = "black")
-        draw.text((((width - textWidth)/2)-1, ((height-textHeight)/2)+1), txt, font = font, fill = "black")
-        draw.text((((width - textWidth)/2)+1, ((height-textHeight)/2)+1), txt, font = font, fill = "black")
+        #draw.text((((width - textWidth)/2)-1, ((height-textHeight)/2)-1), txt, font = font, fill = "black")
+        #draw.text((((width - textWidth)/2)+1, ((height-textHeight)/2)-1), txt, font = font, fill = "black")
+        #draw.text((((width - textWidth)/2)-1, ((height-textHeight)/2)+1), txt, font = font, fill = "black")
+        #draw.text((((width - textWidth)/2)+1, ((height-textHeight)/2)+1), txt, font = font, fill = "black")
 
         #Draw Text
-        draw.text(((width - textWidth)/2, (height-textHeight)/2), txt, font = font, fill = "white")
+        for line in lines:
+            draw.text(((width - textWidth)/2, (height-textHeight)/2), txt, font = font, fill = "white")
 
         #Save it
         temp.save('/home/brady/Code/Python/Twitter/KanyeBot/img/final.jpg')
